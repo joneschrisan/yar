@@ -18,9 +18,9 @@ class yar_autoloader {
                 set_include_path(join(PATH_SEPARATOR, $class_paths));
             }
             
-            $class_extentions = spl_autoload_extensions();
-            if (strpos($class_extentions, ".php") === false) {
-                spl_autoload_extensions($class_extentions . ",.php");
+            $class_extensions = spl_autoload_extensions();
+            if (strpos($class_extensions, ".php") === false) {
+                spl_autoload_extensions($class_extensions . ",.php");
             }
             
             if (in_array("spl_autoload", spl_autoload_functions())) {

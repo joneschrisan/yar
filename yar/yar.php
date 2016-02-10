@@ -27,6 +27,12 @@ class yar {
         return $this->route;
     }
     
+    public function dget_params() {
+        if (isset($this->route['params']))
+            return $this->route['params'];
+        return null;
+    }
+    
     public function dget_namespace() {
         return $this->route['namespace'];
     }
@@ -46,9 +52,9 @@ class yar {
         if ($use_cache) {
             $this->cache_filename = $use_cache . DIRECTORY_SEPARATOR . ($site ? $site . "_" : "") . "yar_cache.tmp";
             $this->cache_file = new file($this->cache_filename);
-            //if (strlen($this->cache_file->contents) > 2 && !$overwrite) {
-            //    $this->routes = unserialize($this->cache_file->contents);
-            //}
+            if (strlen($this->cache_file->contents) > 2 && !$overwrite) {
+                $this->routes = unserialize($this->cache_file->contents);
+            }
         }
     }
     
@@ -59,21 +65,24 @@ class yar {
         }
     }
     
-    public function add_routes_from_file($filename) {
-        $tmp = new file($filename);
+    public function add_routes_from_file($filename, $type = self::JSON) {
+        $file = new file($filename);
         
-        $tmpArr = json_decode($tmp->contents, true);
+        $routes = $this->get_file_contents($file, $type);
         
-        foreach($tmpArr as $route) {
+        foreach($routes as $route) {
             $this->routes[$route['route']] = $this->route_to_regex($route);
         }
     }
     
-    public function add_route($route, $controller = "default") {
-        $this->routes[$route] = array(
+    public function add_route($route, $controller = "default", $method = null, $namespace = "") {
+        $$route = array(
             "route" => $route,
-            "controller" => $controller
+            "namespace" => $namespace,
+            "controller" => $controller,
+            "method" => $method
         );
+        $this->routes[$route['route']] = $this->route_to_regex($route);
     }
     
     public function remove_route($route) {
@@ -102,9 +111,36 @@ class yar {
             }
         }
         
-        if ($matches)
+        if ($tmp)
             return true;
-        throw new \yar\YarException("No route found", 1);
+        
+        throw new YarException("No route found", 1);
+    }
+    
+    public function render($template_engine = null) {
+        $controller_class_name = "\\" . $this->namespace . "\\controllers\\" . $this->controller;
+        $controller = new $controller_class_name($template_engine);
+        $method = $this->method;
+        return $controller->$method($this->params);
+    }
+    
+    private function get_file_contents($file, $type) {
+        $contents = "";
+        switch($type) {
+            case self::JSON:
+                $contents = json_decode($tmp->contents, true);
+                break;
+            case self::XML:
+                // ToDo
+                break;
+            case self::INI:
+                // ToDo
+                break;
+            case self::PLAIN:
+                // ToDo
+                break;
+        }
+        return $contents;
     }
     
     private function route_to_regex($route) {
