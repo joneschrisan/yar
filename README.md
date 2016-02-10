@@ -25,7 +25,7 @@ The autoload should be registered before anything else. This will add the yar di
 
 ```
 require_once("path to yar dir autoloader.php");
-\yar\yar_autoloader::register();
+\yar\autoloader::register();
 ```
 
 ### Class \yar\yar
