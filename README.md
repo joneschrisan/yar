@@ -24,7 +24,7 @@ The autoload should be registered before anything else. This will add the yar di
 *This autoloader uses the standard spl_autoloader function. If you have already added the spl_autoloader standard function to the spl_autoload queue then a user notice will be thrown. If you are using the old __autoloader function then you will have to add your autoloader to the spl_autoload queue see [PHP spl_autoloar_register](http://php.net/manual/en/function.spl-autoload-register.php) for more information.*
 
 ```
-require_once("path to yar dirautoloader.php");
+require_once("path to yar dir autoloader.php");
 \yar\yar_autoloader::register();
 ```
 
