@@ -7,7 +7,7 @@ I'm releasing it under the MIT licence so anyone is free to use it as per that.
 
 This is a work in progress and any advice is always welcome. This project is not finished yet and I will update this readme with usage instructions when I can.
 
-### Class \yar\autoloader
+### Class yar_autoloader
 
 #### register
 
@@ -25,7 +25,7 @@ The autoload should be registered before anything else. This will add the yar di
 
 ```
 require_once("path to yar dir autoloader.php");
-\yar\autoloader::register();
+yar_autoloader::register();
 ```
 
 ### Class \yar\yar
