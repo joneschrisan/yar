@@ -1,5 +1,5 @@
 <?php
-class autoloader {
+class yar_autoloader {
     
     private static $autoloader_set = false;
     
