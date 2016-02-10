@@ -7,7 +7,7 @@ I'm releasing it under the MIT licence so anyone is free to use it as per that.
 
 This is a work in progress and any advice is always welcome. This project is not finished yet and I will update this readme with usage instructions when I can.
 
-### \yar\yar_autoloader
+### Class \yar\autoloader
 
 #### register
 
@@ -28,7 +28,7 @@ require_once("path to yar dir autoloader.php");
 \yar\yar_autoloader::register();
 ```
 
-### \yar\yar
+### Class \yar\yar
 
 #### __construct
 
@@ -60,7 +60,7 @@ Closes all handels and saves the routing file if use_cache was set.
 
 #### find_route
 
-### \yar\file
+### Class \yar\file
 
 #### filename
 
