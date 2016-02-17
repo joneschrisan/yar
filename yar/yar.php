@@ -65,6 +65,11 @@ class yar {
         }
     }
     
+    public static function recache_routes($site = null) {
+        $o = new self(true, $site, true);
+        $o->__destruct();
+    }
+    
     public function add_routes_from_file($filename, $type = self::JSON) {
         $file = new file($filename);
         
