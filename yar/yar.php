@@ -96,7 +96,7 @@ class yar {
     }
     
     public function add_route($route, $controller = "default", $method = null, $namespace = "") {
-        $$route = array(
+        $route = array(
             "route" => $route,
             "namespace" => $namespace,
             "controller" => $controller,
