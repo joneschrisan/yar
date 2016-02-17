@@ -65,8 +65,23 @@ class yar {
         }
     }
     
-    public static function recache_routes($site = null) {
+    public static function recache_routes($routes, $site = null) {
         $o = new self(true, $site, true);
+        
+        if (is_array($routes)) {
+            foreach($routes as $route) {
+                if ($is_array($route)) {
+                    $route = $route['route'];
+                    $controller = $route['controller'] ? $route['controller'] : "default";
+                    $method = $route['method'] ? $route['method'] : null;
+                    $namespace = $route['namespace'] ? $route['namespace'] : "";
+                }
+                $o->add_route($route, ($controller ? $controller : "default"), ($method ? $method : null), ($namespace ? $namespace : ""));
+            }
+        } else {
+            $o->add_routes_from_file($routes);
+        }
+        
         $o->__destruct();
     }
     
