@@ -30,7 +30,7 @@ class yar {
     public function dget_params() {
         if (isset($this->route['params']))
             return $this->route['params'];
-        return null;
+        return array();
     }
     
     public function dget_namespace() {
@@ -90,8 +90,12 @@ class yar {
         
         $routes = $this->get_file_contents($file, $type);
         
-        foreach($routes as $route) {
-            $this->routes[$route['route']] = $this->route_to_regex($route);
+        if ($routes) {
+            foreach($routes as $route) {
+                $this->routes[$route['route']] = $this->route_to_regex($route);
+            }
+        } else {
+            throw new YarException("No routes given", 1);
         }
     }
     
@@ -137,11 +141,12 @@ class yar {
         throw new YarException("No route found", 1);
     }
     
-    public function render($template_engine = null) {
+    public function render($template_engine = null, $params = array()) {
         $controller_class_name = "\\" . $this->namespace . "\\controllers\\" . $this->controller;
         $controller = new $controller_class_name($template_engine);
         $method = $this->method;
-        return $controller->$method($this->params);
+        $params = array_merge($this->params, $params);
+        return $controller->$method($params);
     }
     
     private function get_file_contents($file, $type) {
