@@ -124,16 +124,13 @@ class yar {
     }
     
     public function find_route($request_route) {
-        echo "<pre>";
         $matches = null;
         $count = count(explode("/", $request_route));
         $tmp = null;
-        echo "<pre>" . print_r($this->routes, true) . "</pre>";
         foreach($this->routes as $key => $route) {
             if ($count == count(explode("/", $route['route']))) {
                 $matches = array();
                 preg_match_all("!" . $route['route'] . "!", $request_route, $matches);
-                echo "<pre>" . print_r($matches, true) . "</pre>";
                 $tmp = array_shift($matches);
                 if ($tmp) {
                     if($matches) {
@@ -148,7 +145,6 @@ class yar {
                 }
             }
         }
-        echo "</pre>";
         if ($tmp) {
             return true;
         }
