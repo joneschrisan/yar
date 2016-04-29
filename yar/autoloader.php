@@ -23,15 +23,17 @@ class yar_autoloader {
                 spl_autoload_extensions($class_extensions . ",.php");
             }
             
-            if (in_array("spl_autoload", spl_autoload_functions())) {
+            if (is_array(spl_autoload_functions()) && in_array("spl_autoload", spl_autoload_functions())) {
                 trigger_error("Auto loader already set", E_USER_NOTICE);
             } else {
                 if (PHP_VERSION_ID < 50300) {
-                    if (!spl_autoload_register("spl_autoload"))
+                    if (!spl_autoload_register("spl_autoload")) {
                         $error = true;
+                    }
                 } else {
-                    if (!spl_autoload_register("spl_autoload", true, $prepend))
+                    if (!spl_autoload_register("spl_autoload", true, $prepend)) {
                         $error = true;
+                    }
                 }
             }
                 

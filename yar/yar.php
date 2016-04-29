@@ -7,6 +7,7 @@ class yar {
     const XML = 2;
     const INI = 3;
     const PLAIN = 4;
+    const CSV = 5;
     
     private $cach_filename = null;
     private $cache_file = null;
@@ -34,7 +35,11 @@ class yar {
     }
     
     public function dget_namespace() {
-        return $this->route['namespace'];
+        if (isset($this->route['namespace'])) {
+            return $this->route['namespace'];
+        } else {
+            return "";
+        }
     }
     
     public function dget_controller() {
@@ -46,8 +51,9 @@ class yar {
     }
     
     public function __construct($use_cache = true, $site = null, $overwrite = false) {
-        if ($use_cache === true)
+        if ($use_cache === true) {
             $use_cache = sys_get_temp_dir();
+        }
             
         if ($use_cache) {
             $this->cache_filename = $use_cache . DIRECTORY_SEPARATOR . ($site ? $site . "_" : "") . "yar_cache.tmp";
@@ -102,10 +108,14 @@ class yar {
     public function add_route($route, $controller = "default", $method = null, $namespace = "") {
         $route = array(
             "route" => $route,
-            "namespace" => $namespace,
             "controller" => $controller,
             "method" => $method
         );
+        
+        if ($namespace) {
+            $route['namespace'] = $namespace;
+        }
+        
         $this->routes[$route['route']] = $this->route_to_regex($route);
     }
     
@@ -114,12 +124,16 @@ class yar {
     }
     
     public function find_route($request_route) {
+        echo "<pre>";
         $matches = null;
         $count = count(explode("/", $request_route));
+        $tmp = null;
+        echo "<pre>" . print_r($this->routes, true) . "</pre>";
         foreach($this->routes as $key => $route) {
             if ($count == count(explode("/", $route['route']))) {
                 $matches = array();
                 preg_match_all("!" . $route['route'] . "!", $request_route, $matches);
+                echo "<pre>" . print_r($matches, true) . "</pre>";
                 $tmp = array_shift($matches);
                 if ($tmp) {
                     if($matches) {
@@ -134,15 +148,20 @@ class yar {
                 }
             }
         }
-        
-        if ($tmp)
+        echo "</pre>";
+        if ($tmp) {
             return true;
+        }
         
         throw new YarException("No route found", 1);
     }
     
     public function render($template_engine = null, $params = array()) {
-        $controller_class_name = "\\" . $this->namespace . "\\controllers\\" . $this->controller;
+        $controller_class_name = "";
+        if ($this->namespace) {
+            $controller_class_name .= "\\" . $this->namespace . "\\controllers\\";
+        }
+        $controller_class_name .= $this->controller;
         $controller = new $controller_class_name($template_engine);
         $method = $this->method;
         $params = array_merge($this->params, $params);
@@ -153,7 +172,7 @@ class yar {
         $contents = "";
         switch($type) {
             case self::JSON:
-                $contents = json_decode($tmp->contents, true);
+                $contents = json_decode($file->contents, true);
                 break;
             case self::XML:
                 // ToDo
@@ -162,6 +181,9 @@ class yar {
                 // ToDo
                 break;
             case self::PLAIN:
+                // ToDo
+                break;
+            case self::CSV:
                 // ToDo
                 break;
         }
