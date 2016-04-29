@@ -1,0 +1,17 @@
+[
+	{
+		"route": "/homeAction",
+		"controller": "default_controller",
+		"method": "homeAction"
+	},
+	{
+		"route": "/home",
+		"controller": "default_controller",
+		"method": "home"
+	},
+	{
+		"route": "/home/{id:i}",
+		"controller": "default_controller",
+		"method": "home"
+	}
+]
