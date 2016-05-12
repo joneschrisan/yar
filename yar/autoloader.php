@@ -8,15 +8,7 @@ class yar_autoloader {
         if (self::$autoloader_set) {
             trigger_error("Auto loader already set", E_USER_NOTICE);
         } else {
-            $path = realpath(__DIR__ . DIRECTORY_SEPARATOR . "..");
-            $paths = get_include_path();
-            if (strpos($paths, $path) === false) {
-                $class_paths = array(
-                    $paths,
-                    $path
-                );
-                set_include_path(join(PATH_SEPARATOR, $class_paths));
-            }
+            self::add_path(__DIR__ . DIRECTORY_SEPARATOR . "..");
             
             $class_extensions = spl_autoload_extensions();
             if (strpos($class_extensions, ".php") === false) {
@@ -42,6 +34,18 @@ class yar_autoloader {
             } else {
                 self::$autoloader_set = true;
             }
+        }
+    }
+    
+    public static function add_path($path) {
+        $path = realpath($path);
+        $paths = get_include_path();
+        if (strpos($paths, $path) === false) {
+            $class_paths = array(
+                $paths,
+                $path
+            );
+            set_include_path(join(PATH_SEPARATOR, $class_paths));
         }
     }
 }
